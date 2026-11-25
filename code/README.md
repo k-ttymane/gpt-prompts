@@ -1,17 +1,17 @@
-# gpt-prompts
+# Code audit prompts
 
-This repository contains prompts you can paste into an LLM to review a pull request, a release candidate, or a whole codebase. Give the reviewer the software and its requirements. The prompts ask it to trace what real callers do, find where the implementation breaks a promise, and show the evidence for each finding.
+This directory contains prompts you can paste into an LLM to review a pull request, a release candidate, or a whole codebase. Give the reviewer the software and its requirements. The prompts ask it to trace what real callers do, find where the implementation breaks a promise, and show the evidence for each finding.
 
 ## Choose a workflow
 
 | Workflow | When to use it | What you get |
 | --- | --- | --- |
-| [Core audit prompt](CODE_AUDIT_PROMPT.md#core-audit-prompt) | You want one reviewer to follow a change across the system. Use the full prompt or name particular tasks. | One scoped report with findings, checks, coverage gaps, and fix order. |
-| [Eight independent runs](CODE_AUDIT_8_RUNS.md) | You want independent reviews of the same revision from four complementary pairs of sessions. | Eight reports you can reconcile into one release decision. |
+| [Core audit prompt](code-clarity.md#core-audit-prompt) | You want one reviewer to follow a change across the system. Use the full prompt or name particular tasks. | One scoped report with findings, checks, coverage gaps, and fix order. |
+| [Eight independent runs](8-runs.md) | You want independent reviews of the same revision from four complementary pairs of sessions. | Eight reports you can reconcile into one release decision. |
 
 ## Run your first audit
 
-1. **Pin the target.** Name the revision or PR base and head. For a working tree, include the relevant uncommitted files. State a promise a caller can observe, the supported environment, and any decision the reviewer should treat as settled. [Project packet template](CODE_AUDIT_PROMPT.md#project-packet)
+1. **Pin the target.** Name the revision or PR base and head. For a working tree, include the relevant uncommitted files. State a promise a caller can observe, the supported environment, and any decision the reviewer should treat as settled. [Project packet template](code-clarity.md#project-packet)
 2. **Start a fresh chat or coding-agent session.** Copy the core block and add your project packet. Give a coding agent access to the checkout. In a chat, attach the tree, relevant entry points and callers, tests, manifests, configuration, and build or release files. A text-only reviewer can trace source and specify a check for you to run.
 3. **Append a matching module when relevant.** A Python service managed by Ansible can use both blocks. For a large repository, send a journey together with its producer, consumer, storage contract, and tests. [Technology modules](#technology-modules)
 4. **Read the verdict for the scope actually reviewed.** Each substantive finding should give you a location, trigger, expected and actual outcome, fix, and check. Prioritize the findings that can affect a real caller. The default mode is read-only.
@@ -40,7 +40,7 @@ Run the eight numbered blocks **in order, each in a fresh session**, with the sa
 | 5 and 6 | Who may act on which resource, and what should operators observe? | Do effective settings and resource-level controls enforce that policy and report the outcome? |
 | 7 and 8 | What must be built, shipped, documented, and measured? | Does the installed artifact work as advertised at the relevant scale? |
 
-After Run 8, supply the reports to the consolidation block. It groups findings by root cause, keeps the run IDs as aliases, and checks disagreements against evidence. [Consolidate reports](CODE_AUDIT_PROMPT.md#consolidate-reports)
+After Run 8, supply the reports to the consolidation block. It groups findings by root cause, keeps the run IDs as aliases, and checks disagreements against evidence. [Consolidate reports](code-clarity.md#consolidate-reports)
 
 ## Technology modules
 
@@ -48,18 +48,18 @@ Each file has a fenced prompt you can copy into either workflow. Use the modules
 
 | Module | What it examines | Example question |
 | --- | --- | --- |
-| [Go](GO_AUDIT_MODULE.md) | Effective language version, API and error contracts, goroutines, I/O, build targets, and profiling | What unblocks a producer when its consumer exits early? |
-| [Python](PYTHON_AUDIT_MODULE.md) | Imports, shared state, iterators, async cancellation, test doubles, and distribution packaging | Can the installed CLI load its bundled template outside the checkout? |
-| [Terraform](TERRAFORM_AUDIT_MODULE.md) | Provider and backend selection, resource addresses, existing state, lifecycle, and plan evidence | Will inserting a list item change the identity of an existing resource? |
-| [Packer](PACKER_AUDIT_MODULE.md) | Image inputs, selected builders, host and guest provisioners, post-processing, and first boot | Did the provisioning step run inside the image that consumers actually receive? |
-| [POSIX shell](POSIX_SHELL_AUDIT_MODULE.md) | Portable POSIX.1-2017 shell, BSD/GNU utility differences, exit status, and native `/bin/sh` on macOS and Linux | Does a failing producer reach the caller, and do quoted filenames survive on both platforms? |
-| [PowerShell](POWERSHELL_AUDIT_MODULE.md) | Editions, object streams, native exit codes, error preferences, remoting, and `ShouldProcess` | Can a native command fail while the surrounding script returns success? |
-| [Ansible](ANSIBLE_AUDIT_MODULE.md) | Inventory, variable precedence, delegation, serial batches, handlers, and convergence | Does a migration intended to run once across the fleet run once per batch? |
-| [Salt](SALT_AUDIT_MODULE.md) | Minion targeting, pillar and grains, rendered states, requisites, and convergence | Does changing one managed file trigger the intended service action? |
+| [Go](go/golang.md) | Effective language version, API and error contracts, goroutines, I/O, build targets, and profiling | What unblocks a producer when its consumer exits early? |
+| [Python](python/README.md) | Imports, shared state, iterators, async cancellation, test doubles, and distribution packaging | Can the installed CLI load its bundled template outside the checkout? |
+| [Terraform](terraform/README.md) | Provider and backend selection, resource addresses, existing state, lifecycle, and plan evidence | Will inserting a list item change the identity of an existing resource? |
+| [Packer](packer/README.md) | Image inputs, selected builders, host and guest provisioners, post-processing, and first boot | Did the provisioning step run inside the image that consumers actually receive? |
+| [POSIX shell](bash/README.md) | Portable POSIX.1-2017 shell, BSD/GNU utility differences, exit status, and native `/bin/sh` on macOS and Linux | Does a failing producer reach the caller, and do quoted filenames survive on both platforms? |
+| [PowerShell](powershell/README.md) | Editions, object streams, native exit codes, error preferences, remoting, and `ShouldProcess` | Can a native command fail while the surrounding script returns success? |
+| [Ansible](ansible/README.md) | Inventory, variable precedence, delegation, serial batches, handlers, and convergence | Does a migration intended to run once across the fleet run once per batch? |
+| [Salt](salt/README.md) | Minion targeting, pillar and grains, rendered states, requisites, and convergence | Does changing one managed file trigger the intended service action? |
 
 ## Work with the results
 
 **Source-verified** means the cited code or configuration establishes the claim. **Observed** means a check exercised it. An assumption that could overturn a finding belongs in open questions with the cheapest way to settle it. A missing critical journey can justify a verdict of **Insufficient evidence to judge**.
 
-For a P0 or P1, give a fresh reviewer the finding and the same revision to challenge its premise. If a review stops mid-journey, carry its handoff into the next session for that review. [Verify findings](CODE_AUDIT_PROMPT.md#independent-verification-prompt) · [Resume a review](CODE_AUDIT_PROMPT.md#resume-a-review)
+For a P0 or P1, give a fresh reviewer the finding and the same revision to challenge its premise. If a review stops mid-journey, carry its handoff into the next session for that review. [Verify findings](code-clarity.md#independent-verification-prompt) · [Resume a review](code-clarity.md#resume-a-review)
 

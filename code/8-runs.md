@@ -14,7 +14,11 @@ Use eight fresh sessions on the same revision, in numerical order. **Runs 1, 3, 
 | 5–6 | Trust boundaries, configuration authority, and operational promises | Resource access, effective settings, failure signals, and safe recovery |
 | 7–8 | Release inputs, supported artifacts, workload metrics, and public docs | Clean build, installed artifact, quickstart, release tests, and measured costs |
 
-## Run 1 — Map system design and public behavior
+[Project packet](code-clarity.md#project-packet) · [Technology modules](README.md#technology-modules) · [Consolidate reports](code-clarity.md#consolidate-reports)
+
+## Copy-paste runs
+
+### Run 1 — Map system design and public behavior
 
 ````markdown
 # Run 1 — Map system design and public behavior
@@ -39,7 +43,7 @@ Perform an independent, read-only review of system design and contracts. Reconst
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 2 — Test caller behavior and production wiring
+### Run 2 — Test caller behavior and production wiring
 
 ````markdown
 # Run 2 — Test caller behavior and production wiring
@@ -64,7 +68,7 @@ Perform an independent, read-only review of concrete implementation and configur
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 3 — Map state, recovery, and compatibility contracts
+### Run 3 — Map state, recovery, and compatibility contracts
 
 ````markdown
 # Run 3 — Map state, recovery, and compatibility contracts
@@ -89,7 +93,7 @@ Perform an independent, read-only review of system design and contracts. Reconst
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 4 — Test failure, concurrency, migration, and rollback
+### Run 4 — Test failure, concurrency, migration, and rollback
 
 ````markdown
 # Run 4 — Test failure, concurrency, migration, and rollback
@@ -114,7 +118,7 @@ Perform an independent, read-only review of concrete implementation and configur
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 5 — Map trust, configuration authority, and operations
+### Run 5 — Map trust, configuration authority, and operations
 
 ````markdown
 # Run 5 — Map trust, configuration authority, and operations
@@ -139,7 +143,7 @@ Perform an independent, read-only review of system design and contracts. Reconst
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 6 — Test controls, configuration, and operator signals
+### Run 6 — Test controls, configuration, and operator signals
 
 ````markdown
 # Run 6 — Test controls, configuration, and operator signals
@@ -164,7 +168,7 @@ Perform an independent, read-only review of concrete implementation and configur
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 7 — Map delivery, workload, and documentation contracts
+### Run 7 — Map delivery, workload, and documentation contracts
 
 ````markdown
 # Run 7 — Map delivery, workload, and documentation contracts
@@ -189,7 +193,7 @@ Perform an independent, read-only review of system design and contracts. Reconst
 - Record the target, paths reviewed, material coverage gaps, and exact directory, command, and outcome for checks. Distinguish fresh, cached, supplied, blocked, and unrun checks. Close with `Ready to ship`, `Fix before shipping`, or `Insufficient evidence to judge` for this run’s stated scope. If interrupted, leave the next exact file or check.
 ````
 
-## Run 8 — Test the release artifact, costs, and public instructions
+### Run 8 — Test the release artifact, costs, and public instructions
 
 ````markdown
 # Run 8 — Test the release artifact, costs, and public instructions

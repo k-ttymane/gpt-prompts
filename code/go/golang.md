@@ -1,3 +1,8 @@
+# Optional Go module
+
+Append the block to the current review when it includes Go components. [Core audit prompt](../code-clarity.md#core-audit-prompt) · [Eight-run guide](../8-runs.md)
+
+````markdown
 ## Optional Go module
 
 <!-- BEGIN GO MODULE -->
@@ -68,3 +73,4 @@ Start from the repository’s own scripts. Select commands that answer a questio
 Evaluate `-trimpath` for reproducible paths, `-ldflags="-s -w"` for size, and linker `-X` for version metadata against the project’s release and debugging needs. Preserve usable diagnostic artifacts. Before recommending `CGO_ENABLED=0`, verify native dependencies, runtime behavior, and actual linkage on shipped targets. Use representative profiles for profile-guided optimization (`default.pgo`). Measure latency, throughput, and memory headroom before proposing `GOGC` or the soft runtime limit `GOMEMLIMIT` in a constrained deployment. [Profile-guided optimization](https://go.dev/doc/pgo) · [GC guide](https://go.dev/doc/gc-guide)
 
 <!-- END GO MODULE -->
+````

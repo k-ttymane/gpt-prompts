@@ -6,18 +6,19 @@
 2. **Give the reviewer the shipping context.** Supply repository access or a tree, README, manifests and lockfiles, entry points, build and CI scripts, deployment configuration, migrations, generators, and relevant tests. Include supported platforms, workload, and redacted sample data. Carry over the latest requirements, corrections, accepted tradeoffs, and earlier finding IDs.
 3. **Start a fresh review conversation.** Give it the decision history and let it form its own view of the code. For a consequential release, a second reviewer or different model can challenge the first report. Resolve disagreements and agreements alike against the code and checks.
 4. **Batch by a user journey.** Map the system first. When a journey and its dependencies no longer fit comfortably in context, review one at a time. Send the producer, worker, storage contract, notification consumer, and relevant tests together. In a new session, carry forward the map, revision, and last handoff. Ask for one consolidated report after the last batch.
-5. **Choose what to copy.** Attach this file and name the sections to use, or copy between the matching `BEGIN` and `END` comments in GitHub’s **Raw** view. Use the core for every project. Append a language module only for the components it covers. Fill the context fields you know or give them in your message. Tell the reviewer whether it can run local checks. With pasted code, bring back the output of the most important proposed check.
+5. **Choose what to copy.** In the rendered Markdown, copy the core block and add the project packet. Append a module for each technology in scope. State which local checks may run, or attach the source and relevant check output. [Copy-paste prompts](#copy-paste-prompts) · [Technology modules](README.md#technology-modules)
 
-[Core audit prompt](#core-audit-prompt) · [Independent verification prompt](#independent-verification-prompt) · [Template for other languages](#template-for-other-languages) · [Optional Go module](#optional-go-module)
+This single-session prompt has ten passes. For eight independent sessions, use the numbered blocks in the [eight-run guide](8-runs.md). The [Go module](go/golang.md) is available separately.
 
-**Example request for a pull request**
+For a narrower review of import retries, select passes 3 and 7 for that journey. Before acting on a high-impact finding, use the independent verification prompt with the same revision.
 
-> Use the Core audit prompt in `CODE_AUDIT_PROMPT.md`. Compare this PR with its merge base on `origin/main`. Prioritize import retries. After a worker restart and redelivery, I expect one stored record and one completion notice. The older worker stays deployed during the rollout. Run the repository’s local checks where available. Audit only.
+## Copy-paste prompts
 
-For a narrower follow-up, specify the journey and passes, for example “Run passes 3 and 7 on the import retry path.” Before acting on a high-impact finding, use the independent verification prompt with the same revision.
+[Core audit prompt](#core-audit-prompt) · [Project packet](#project-packet) · [Resume a review](#resume-a-review) · [Independent verification](#independent-verification-prompt) · [Consolidate reports](#consolidate-reports) · [Other languages](#template-for-other-languages)
 
-## Core audit prompt
+### Core audit prompt
 
+````markdown
 <!-- BEGIN CORE AUDIT PROMPT -->
 
 Review this software as the maintainer responsible for its next release. Identify which promises hold, where a real caller can encounter a failure, what can safely be simplified or removed, which runtime or build costs merit action, and which decisions need an owner. Ground each recommendation in the reviewed revision.
@@ -142,9 +143,54 @@ Deliver one report in the following order. Use finding IDs to cross-reference de
 7. **Fix order and edits.** Group IDs into small, dependency-aware changes. Start with release and data-integrity risks, then safe simplifications, then measured optimizations and delivery improvements. Keep regression checks and necessary contract or documentation updates with each fix. In audit-only mode, suggest the first group and leave the choice of implementation phase to me. When edits were requested, list the IDs actually fixed, the affected entry points, and exact validation. Where feasible, observe the regression test fail for the intended reason before the fix and pass afterward. Check neighboring behavior and state any remaining verification limit.
 
 <!-- END CORE AUDIT PROMPT -->
+````
 
-## Independent verification prompt
+### Project packet
 
+```text
+Project packet for this review. Fill known fields and omit the rest.
+
+Repository or attached files:
+Target revision or PR head, comparison base, and working-tree changes:
+Review scope, selected task numbers, exclusions, and critical journeys:
+Caller-visible promises, including what must survive failure:
+Settled decisions, latest corrections, and historical finding IDs:
+Supported versions, platforms, deployment sequence, and stored data:
+Typical/peak workload, limits, and important failure modes:
+Available local checks, redacted fixtures, CI revision, and artifacts:
+Mode: audit only, unless I explicitly request edits to a named scope.
+```
+
+### Example request for a pull request
+
+```text
+Use the Core audit prompt from the gpt-prompts repository (code/code-clarity.md).
+Compare this PR with its merge base on origin/main. Prioritize import retries.
+After a worker restart and redelivery, I expect one stored record and one
+completion notice. The older worker stays deployed during the rollout. Run the
+repository’s local checks where available. Audit only.
+```
+
+### Resume a review
+
+```text
+Resume this audit from the supplied handoff and project packet. Check the
+target revision, comparison base, and working-tree snapshot. Revalidate
+affected findings if the target changed. Retain stable IDs and the distinction
+between inspected source, observed runs, and open hypotheses.
+
+Start with the handoff's next file, symbol, or check. Resolve open caller or
+consumer links, continue the selected tasks through the remaining scope, and
+record new checks alongside earlier results. A carried-over result keeps its
+original revision and evidence status. Produce a consolidated report when
+coverage is complete. If another handoff is needed, end with RESUME and give
+the revision, coverage, finding IDs and anchors, checks, unresolved boundary,
+and next exact step.
+```
+
+### Independent verification prompt
+
+````markdown
 <!-- BEGIN VERIFICATION PROMPT -->
 
 Review the supplied audit report against the specified revision, comparison base, and accepted decisions. Independently challenge every P0 and P1 and any other finding I name. Keep the review read-only.
@@ -154,9 +200,39 @@ For each ID, restate the claim in one sentence. Trace the actual caller, trigger
 Return a table with the original ID, verdict (`Confirmed`, `Refuted`, or `Needs evidence`), decisive source location or observed result, and next action. For a confirmed defect, give a short regression test using the project’s own interfaces, or a precise setup, action, and observable assertion if the harness is unavailable. It should fail for the identified reason before the fix and pass afterward. For a refuted claim, show exactly which protection covers the trigger. For an unresolved one, give the missing fact and cheapest check. Keep to the supplied findings unless you independently establish a new release blocker, which should be identified separately.
 
 <!-- END VERIFICATION PROMPT -->
+````
 
-## Template for other languages
+### Consolidate reports
 
+```text
+Consolidate the supplied audit reports for the named repository and revision.
+Use this after all available independent runs or batches have finished.
+Read the project packet and any supplied source or logs. Keep the review
+read-only. List which runs, revisions, and scopes are present. Mark missing
+coverage and keep evidence from different revisions identifiable.
+
+Group reports by causal defect. Merge IDs only when the trigger and underlying
+fix are shared. Preserve distinct failures in the same file. Assign a stable
+F-001-style canonical ID, retain every contributing run ID as an alias, and
+preserve earlier canonical IDs where the same defect was already tracked.
+Reconcile contradictory findings against the actual contract, source, and
+observations. Agreement between reviewers can guide checking. Assign
+confidence using the evidence. If the evidence is missing, give the disputed
+claim and the cheapest check that can settle it.
+
+Produce a scoped release verdict, a severity-ordered index with canonical
+IDs and aliases, and only the necessary detail for each root cause. Include
+triggers, expected and actual outcomes, evidence locations, smallest fixes,
+and decisive regression checks. Account for refuted or superseded IDs,
+historical finding status, fresh/cached/supplied/unrun checks, and uncovered
+critical journeys. Close with small dependency-aware fixes, keeping tests and
+docs with their fixes. If the available reports cannot support a release
+judgment, state which fact prevents it.
+```
+
+### Template for other languages
+
+````markdown
 <!-- BEGIN LANGUAGE MODULE TEMPLATE -->
 
 Apply these checks to the named language, runtime version, and components. Fill in project-specific examples or select the relevant row below. Map conclusions back to the core passes and finding IDs.
@@ -173,3 +249,4 @@ Apply these checks to the named language, runtime version, and components. Fill 
 | Java / Kotlin | Resource closure, blocking work on shared executors, and unchecked casts crossing API boundaries. Consider the project’s compiler checks, SpotBugs, Error Prone, and dependency analysis where applicable. |
 
 <!-- END LANGUAGE MODULE TEMPLATE -->
+````
